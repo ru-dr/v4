@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:v4/components/Home/cards.dart';
+import 'package:v4/components/Home/greetings.dart';
+
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Color(0xff0e1219),
+      body: SafeArea(
+          child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Greeting(),
+            SizedBox(height: 20),
+            Cards(),
+          ],
+        ),
+      )),
+    );
+  }
+}
