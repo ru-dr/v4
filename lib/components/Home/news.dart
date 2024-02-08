@@ -70,8 +70,8 @@ class NewsCard extends StatelessWidget {
     } catch (e) {
       // Create a pop up to show the error
       ScaffoldMessenger.of(context).showSnackBar(
-       const SnackBar(
-        backgroundColor: Colors.redAccent,
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
           content: Text("Error : Cannot open the News Artical"),
         ),
       );
@@ -85,6 +85,7 @@ class NewsCard extends StatelessWidget {
         _launchURL(newsUrl, context);
       },
       child: Card(
+        elevation: 0,
         color: Colors.transparent,
         child: Row(
           children: [
