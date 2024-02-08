@@ -138,7 +138,7 @@ class CustomCard extends StatelessWidget {
           child: Card(
             color: color,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
+              borderRadius: BorderRadius.circular(20.0),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
