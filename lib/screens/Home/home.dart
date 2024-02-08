@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:v4/components/Home/cards.dart';
 import 'package:v4/components/Home/greetings.dart';
+import 'package:v4/components/Home/news.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -19,6 +20,11 @@ class Home extends StatelessWidget {
             Greeting(),
             SizedBox(height: 20),
             Cards(),
+            SizedBox(height: 20),
+            Expanded(
+              flex: 1,
+              child: News(),
+            ),
           ],
         ),
       )),
