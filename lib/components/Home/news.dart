@@ -22,7 +22,7 @@ class _NewsState extends State<News> {
                 color: Color(0xffffffff))),
         const SizedBox(
           height: 10,
-          ),
+        ),
         // create a fixed size scrollable container
         Expanded(
           flex: 1,
@@ -33,7 +33,7 @@ class _NewsState extends State<News> {
               return const Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0),
                 child: NewsCard(
-                    newsUrl: "https://www.google.com",
+                    newsUrl: "",
                     imageUrl:
                         "https://c8.alamy.com/comp/2HAB3PK/a-news-or-article-card-for-a-website-web-interface-template-user-interface-vector-illustration-2HAB3PK.jpg",
                     title:
@@ -63,15 +63,19 @@ class NewsCard extends StatelessWidget {
     required this.newsUrl,
   }) : super(key: key);
 
-  Future<void> _launchURL(String url , context) async {
-   print("Launching URL: $url");
-   try {
-     final newsUri = Uri.parse(url);
-   await launchUrl(newsUri,mode: LaunchMode.externalApplication);
-   } catch (e) {
-     print("Error launching URL: ");
-   }
-   
+  Future<void> _launchURL(String url, context) async {
+    try {
+      final newsUri = Uri.parse(url);
+      await launchUrl(newsUri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      // Create a pop up to show the error
+      ScaffoldMessenger.of(context).showSnackBar(
+       const SnackBar(
+        backgroundColor: Colors.redAccent,
+          content: Text("Error : Cannot open the News Artical"),
+        ),
+      );
+    }
   }
 
   @override
