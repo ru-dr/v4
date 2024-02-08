@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class News extends StatefulWidget {
   const News({Key? key}) : super(key: key);
@@ -10,6 +11,38 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
+  List<dynamic> news = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNews();
+  }
+
+  Future<void> fetchNews() async {
+    try {
+      const apiKey =
+          "30a7f133922d4cb4a1d89c10fdd4759d"; // Replace with your News API key
+      const apiUrl = "https://newsapi.org/v2/";
+      const queryString = "travel safety";
+      const type = "everything";
+      const sorting = "popularity";
+      final response = await http.get(Uri.parse(
+          '$apiUrl$type?q=$queryString&sortBy=$sorting&apiKey=$apiKey'));
+
+      if (response.statusCode == 200) {
+        final parsedResponse = jsonDecode(response.body);
+        setState(() {
+          news = parsedResponse['articles'].take(10).toList();
+        });
+      } else {
+        throw Exception('Failed to load news');
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,23 +56,18 @@ class _NewsState extends State<News> {
         const SizedBox(
           height: 10,
         ),
-        // create a fixed size scrollable container
         Expanded(
           flex: 1,
           child: ListView.builder(
             scrollDirection: Axis.vertical,
-            itemCount: 10,
+            itemCount: news.length,
             itemBuilder: (BuildContext context, int index) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.0),
-                child: NewsCard(
-                    newsUrl: "",
-                    imageUrl:
-                        "https://c8.alamy.com/comp/2HAB3PK/a-news-or-article-card-for-a-website-web-interface-template-user-interface-vector-illustration-2HAB3PK.jpg",
-                    title:
-                        "in ante metus dictum at tempor commodo ullamcorper a lacus",
-                    description:
-                        "Description of the news article. lorem ipsum dolor sit amet. leosdlfjlsdkf lorem  dlkjlkdlkfjsdlfdfjsdjfdjflksdjf dlfjdlskjfl  liksdjflksdj jfglsdkjl  sfjsdl j sddkfjdsl jf sdlkfjsdl j"),
+              final article = news[index];
+              return NewsCard(
+                newsUrl: article['url'],
+                imageUrl: article['urlToImage'] ?? "",
+                title: article['title'] ?? "",
+                description: article['description'] ?? "",
               );
             },
           ),
@@ -65,17 +93,24 @@ class NewsCard extends StatelessWidget {
 
   Future<void> _launchURL(String url, context) async {
     try {
-      final newsUri = Uri.parse(url);
-      await launchUrl(newsUri, mode: LaunchMode.externalApplication);
+      final Uri _url = Uri.parse(url);
+      await launchUrl(_url);
     } catch (e) {
-      // Create a pop up to show the error
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.redAccent,
-          content: Text("Error : Cannot open the News Artical"),
+          content: Text("Error : Cannot open the News Article"),
         ),
       );
     }
+  }
+
+  String truncateDescription(String description, int cutOff) {
+    var words = description.split(' ');
+    if (words.length <= cutOff) {
+      return description;
+    }
+    return '${words.sublist(0, cutOff).join(' ')}...';
   }
 
   @override
@@ -89,45 +124,47 @@ class NewsCard extends StatelessWidget {
         color: Colors.transparent,
         child: Row(
           children: [
-            // render image using network image Url
             Expanded(
-                flex: 3,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image(
-                    height: 90,
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      imageUrl,
-                    ),
-                  ),
-                )),
-            // Add title and description here
+              flex: 3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        height: 90,
+                        color: Colors.grey,
+                      ),
+              ),
+            ),
             const SizedBox(
               width: 15,
             ),
             Expanded(
               flex: 5,
               child: SizedBox(
-                height: 90.0, // Set the height you want here
+                height: 90.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       title,
                       maxLines: 2,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: Color(0xffffffff),
                       ),
                     ),
                     Text(
-                      description,
+                      truncateDescription(description, 10),
                       maxLines: 2,
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Color(0xccffffff),
                       ),
