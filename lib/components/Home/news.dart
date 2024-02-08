@@ -85,6 +85,7 @@ class NewsCard extends StatelessWidget {
         _launchURL(newsUrl, context);
       },
       child: Card(
+        elevation: 0,
         color: Colors.transparent,
         child: Row(
           children: [
