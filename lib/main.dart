@@ -6,6 +6,7 @@ import 'package:v4/screens/hospital/hospital.dart';
 import 'package:v4/screens/emergency/emergency.dart';
 import 'package:v4/screens/ticket/ticket.dart';
 import 'package:v4/screens/explore/explore.dart';
+import 'package:v4/screens/auth/auth.dart';
 
 
 void main() {
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/emergency': (context) => const Emergency(),
         '/ticket': (context) => const Ticket(),
         '/explore': (context) => const Explore(),
+        '/auth': (context) => const Auth(),
       },
     );
   }
