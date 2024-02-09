@@ -150,16 +150,12 @@ class NewsCard extends StatelessWidget {
                 height: 90.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       title,
                       maxLines: 2,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xffffffff),
-                      ),
+                      style: Theme.of(context).textTheme.displayMedium,
                     ),
                     Text(
                       truncateDescription(description, 10),

@@ -33,9 +33,12 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
             fontSize: 22,
           ),
-          displayMedium: GoogleFonts.barlow(
+          displayMedium: GoogleFonts.inter(
             // Use 'Barlow' for body text
             textStyle: Theme.of(context).textTheme.displayMedium,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            color: Colors.white,
           ),
         ),
       ),
