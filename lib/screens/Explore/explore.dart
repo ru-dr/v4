@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 
 class Explore extends StatefulWidget {
   const Explore({Key? key}) : super(key: key);
@@ -12,53 +11,87 @@ class Explore extends StatefulWidget {
 }
 
 class _ExploreState extends State<Explore> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
+  double mapHeight = 0;
+  bool isFullScreen = false;
 
-  static const LatLng _center = const LatLng(23.606769, 72.999130);
+  static const LatLng _center = LatLng(23.606769, 72.999130);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    mapHeight = MediaQuery.of(context).size.height / 2.5;
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
   }
 
   @override
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text(
-        "Explore",
-        style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xffffffff)),
-      ),
-      backgroundColor: const Color(0xff0E1219),
-      iconTheme: const IconThemeData(color: Color(0xffffffff)),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      )),
-    body: SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height/2.5,
-        margin: EdgeInsets.all(10.0), // Add some margin if you want
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0), // This makes the corners rounded
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Explore",
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.0), // This clips the child widget (GoogleMap) to the rounded corners
-          child: GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: const CameraPosition(
-              target: _center,
-              zoom: 11.0,
+        backgroundColor: const Color(0xff0E1219),
+        iconTheme: const IconThemeData(color: Color(0xffffffff)),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          AnimatedContainer(
+            duration: const Duration(
+                seconds: 1), // Increase the duration to 2 seconds
+            curve: Curves.ease, // Use the ease curve for a smoother animation
+            height: mapHeight,
+            margin: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: const CameraPosition(
+                  target: _center,
+                  zoom: 11.0,
+                ),
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 10,
+            left: MediaQuery.of(context).size.width / 2 -
+                25, // Center the button horizontally
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isFullScreen = !isFullScreen;
+                  mapHeight = isFullScreen
+                      ? MediaQuery.of(context).size.height
+                      : MediaQuery.of(context).size.height / 2.5;
+                });
+              },
+              child: isFullScreen
+                  ? SvgPicture.asset('assets/SVG/Pill_up.svg')
+                  : SvgPicture.asset('assets/SVG/Pill_down.svg'),
+            ),
+          ),
+        ],
       ),
-    ),
-  );
-}}
+    );
+  }
+}
