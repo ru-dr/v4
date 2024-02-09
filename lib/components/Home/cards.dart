@@ -95,13 +95,13 @@ class CustomCard extends StatelessWidget {
   final Color color;
 
   const CustomCard({
-    Key? key,
+    super.key,
     required this.svgIcon,
     this.text, // No default value
     required this.onTap,
     this.flex = 1,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

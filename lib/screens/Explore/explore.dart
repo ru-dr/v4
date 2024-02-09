@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Explore extends StatefulWidget {
-  const Explore({Key? key}) : super(key: key);
+  const Explore({super.key});
 
   @override
   _ExploreState createState() => _ExploreState();

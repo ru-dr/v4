@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 class News extends StatefulWidget {
-  const News({Key? key}) : super(key: key);
+  const News({super.key});
 
   @override
   createState() => _NewsState();
@@ -85,12 +85,12 @@ class NewsCard extends StatelessWidget {
   final String newsUrl;
 
   const NewsCard({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.title,
     required this.description,
     required this.newsUrl,
-  }) : super(key: key);
+  });
 
   Future<void> _launchURL(String url, context) async {
     try {
