@@ -8,12 +8,9 @@ class Weather extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xff0E1219),
       appBar: AppBar(
-          title: const Text(
-            "weather",
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xffffffff)),
+          title: Text(
+            "Weather",
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           backgroundColor: const Color(0xff0E1219),
           iconTheme: const IconThemeData(color: Color(0xffffffff)),
@@ -27,7 +24,7 @@ class Weather extends StatelessWidget {
       body: const SafeArea(
         child: Center(
           child: Text(
-            "weather",
+            "Weather",
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

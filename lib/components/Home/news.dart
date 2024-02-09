@@ -39,6 +39,7 @@ class _NewsState extends State<News> {
         throw Exception('Failed to load news');
       }
     } catch (error) {
+      // ignore: avoid_print
       print(error);
     }
   }
@@ -93,8 +94,8 @@ class NewsCard extends StatelessWidget {
 
   Future<void> _launchURL(String url, context) async {
     try {
-      final Uri _url = Uri.parse(url);
-      await launchUrl(_url);
+      final Uri url0 = Uri.parse(url);
+      await launchUrl(url0);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
