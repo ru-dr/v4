@@ -8,9 +8,12 @@ class Translate extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xff0E1219),
       appBar: AppBar(
-          title: Text(
+          title: const Text(
             "Translate",
-            style: Theme.of(context).textTheme.bodySmall,
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffffffff)),
           ),
           backgroundColor: const Color(0xff0E1219),
           iconTheme: const IconThemeData(color: Color(0xffffffff)),

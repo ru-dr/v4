@@ -7,6 +7,7 @@ class Explore extends StatefulWidget {
   const Explore({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ExploreState createState() => _ExploreState();
 }
 
