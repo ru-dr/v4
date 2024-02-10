@@ -1,25 +1,71 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:v4/controllers/location_controller.dart';
+import 'package:get/get.dart';
 
 class Explore extends StatefulWidget {
-  const Explore({super.key});
+  const Explore({Key? key}) : super(key: key);
 
   @override
   _ExploreState createState() => _ExploreState();
 }
 
-class _ExploreState extends State<Explore> {
-  final Completer<GoogleMapController> _controller = Completer();
+class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
+  GoogleMapController? _mapController;
   double mapHeight = 0;
   bool isFullScreen = false;
+  Timer? _timer;
 
-  static const LatLng _center = LatLng(23.606769, 72.999130);
+  LatLng _initialPosition = const LatLng(0, 0);
+
+  final locationController = Get.find<LocationController>();
+
+  // Create a set of markers
+  Set<Marker> _markers = {};
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
+    locationController.getPosition().then((Position position) {
+      setState(() {
+        _initialPosition = LatLng(position.latitude, position.longitude);
+      });
+    });
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      Position position = await locationController.getPosition();
+
+      // Update the map to the new position
+      _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 11.0,
+          ),
+        ),
+      );
+      // Add a marker to the new position
+      setState(() {
+        _markers.clear();
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('current_position'),
+            position: LatLng(position.latitude, position.longitude),
+          ),
+        );
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -29,33 +75,32 @@ class _ExploreState extends State<Explore> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+    _mapController = controller;
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Add this line
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Explore",
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        backgroundColor: const Color(0xff0E1219),
-        iconTheme: const IconThemeData(color: Color(0xffffffff)),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+          title: Text(
+            "Explore",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          backgroundColor: const Color(0xff0E1219),
+          iconTheme: const IconThemeData(color: Color(0xffffffff)),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )),
       body: Stack(
         children: <Widget>[
           AnimatedContainer(
-            duration: const Duration(
-                seconds: 1), // Increase the duration to 2 seconds
-            curve: Curves.ease, // Use the ease curve for a smoother animation
+            duration: const Duration(seconds: 1),
+            curve: Curves.ease,
             height: mapHeight,
             margin: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
@@ -65,17 +110,17 @@ class _ExploreState extends State<Explore> {
               borderRadius: BorderRadius.circular(20.0),
               child: GoogleMap(
                 onMapCreated: _onMapCreated,
-                initialCameraPosition: const CameraPosition(
-                  target: _center,
+                initialCameraPosition: CameraPosition(
+                  target: _initialPosition,
                   zoom: 11.0,
                 ),
+                markers: _markers,
               ),
             ),
           ),
           Positioned(
             bottom: 10,
-            left: MediaQuery.of(context).size.width / 2 -
-                25, // Center the button horizontally
+            left: MediaQuery.of(context).size.width / 2 - 25,
             child: GestureDetector(
               onTap: () {
                 setState(() {

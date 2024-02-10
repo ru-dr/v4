@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:v4/screens/Home/home.dart';
 import 'package:v4/screens/translate/translate.dart';
@@ -8,6 +9,7 @@ import 'package:v4/screens/emergency/emergency.dart';
 import 'package:v4/screens/ticket/ticket.dart';
 import 'package:v4/screens/explore/explore.dart';
 import 'package:v4/screens/auth/auth.dart';
+import 'package:v4/controllers/location_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Get.put(LocationController());
     return MaterialApp(
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xff0E1219),
