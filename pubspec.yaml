@@ -33,11 +33,15 @@ dependencies:
   google_fonts: ^6.1.0
   flutter:
     sdk: flutter
+<<<<<<< HEAD
   http: ^1.2.0
   google_maps_flutter: ^2.5.3
   geocoding: ^2.1.1
   geolocator: ^10.1.0
   get: ^4.6.6
+=======
+  dropdown_button2: ^2.3.8  
+>>>>>>> 6bcab82e82f110d88888edaa2b83ec56382f1a3c
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
