@@ -17,7 +17,6 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   GoogleMapController? _mapController;
   double mapHeight = 0;
   bool isFullScreen = false;
-  Timer? _timer;
 
   LatLng _initialPosition = const LatLng(0, 0);
 
@@ -37,35 +36,30 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
         _initialPosition = LatLng(position.latitude, position.longitude);
       });
     });
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      Position position = await locationController.getPosition();
-
-      // Update the map to the new position
-      _mapController?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
-            zoom: 11.0,
-          ),
-        ),
-      );
-      // Add a marker to the new position
-      setState(() {
-        _markers.clear();
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('current_position'),
-            position: LatLng(position.latitude, position.longitude),
-          ),
-        );
-      });
-    });
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  void updatePosition() async {
+    Position position = await locationController.getPosition();
+
+    // Update the map to the new position
+    _mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: 16.0,
+        ),
+      ),
+    );
+    // Add a marker to the new position
+    setState(() {
+      _markers.clear();
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('current_position'),
+          position: LatLng(position.latitude, position.longitude),
+        ),
+      );
+    });
   }
 
   @override
@@ -136,6 +130,10 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: updatePosition,
+        child: Icon(Icons.location_searching),
       ),
     );
   }
