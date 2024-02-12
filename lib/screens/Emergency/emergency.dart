@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:v4/controllers/location_controller.dart';
+import 'package:shake/shake.dart';
 
 class Emergency extends StatefulWidget {
   const Emergency({Key? key}) : super(key: key);
@@ -11,19 +11,24 @@ class Emergency extends StatefulWidget {
 }
 
 class _EmergencyState extends State<Emergency> {
-  Timer? _timer;
+  ShakeDetector? detector;
+  bool isShakeDetected = false;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    detector = ShakeDetector.autoStart(onPhoneShake: () {
+      print("Shake detected");
       Get.find<LocationController>().getCurrentLocation();
+      setState(() {
+        isShakeDetected = true;
+      });
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    detector?.stopListening();
     super.dispose();
   }
 
@@ -36,7 +41,7 @@ class _EmergencyState extends State<Emergency> {
             appBar: AppBar(
                 title: Text(
                   "Emergency",
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
                 backgroundColor: const Color(0xff0E1219),
                 iconTheme: const IconThemeData(color: Color(0xffffffff)),
@@ -59,8 +64,11 @@ class _EmergencyState extends State<Emergency> {
                             controller.currentLocation == null
                                 ? 'Location not found'
                                 : controller.currentLocation!,
-                            style: const TextStyle(
-                                fontSize: 23, color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 23,
+                                color: isShakeDetected
+                                    ? Colors.red
+                                    : Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ),
