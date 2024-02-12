@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class Weather extends StatefulWidget {
   final String location;
 
-  const Weather({Key? key, required this.location}) : super(key: key);
+  const Weather({super.key, required this.location});
 
   @override
   _WeatherState createState() => _WeatherState();
@@ -88,7 +88,7 @@ class _WeatherState extends State<Weather> {
               final dayForecast = _forecast[index - 1];
               return ListTile(
                 title: Text(
-                  "Day ${index}: ${dayForecast['day']['condition']['text']}, Average Temperature: ${dayForecast['day']['avgtemp_c']}°C",
+                  "Day $index: ${dayForecast['day']['condition']['text']}, Average Temperature: ${dayForecast['day']['avgtemp_c']}°C",
                   style: const TextStyle(color: Color(0xffffffff)),
                 ),
               );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Translate extends StatefulWidget {
-  const Translate({Key? key}) : super(key: key);
+  const Translate({super.key});
 
   @override
   _TranslateState createState() => _TranslateState();
