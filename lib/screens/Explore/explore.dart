@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,7 +6,7 @@ import 'package:v4/controllers/location_controller.dart';
 import 'package:get/get.dart';
 
 class Explore extends StatefulWidget {
-  const Explore({Key? key}) : super(key: key);
+  const Explore({super.key});
 
   @override
   _ExploreState createState() => _ExploreState();
@@ -23,7 +22,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   final locationController = Get.find<LocationController>();
 
   // Create a set of markers
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
 
   @override
   bool get wantKeepAlive => true;
@@ -133,7 +132,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: updatePosition,
-        child: Icon(Icons.location_searching),
+        child: const Icon(Icons.location_searching),
       ),
     );
   }
