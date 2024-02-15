@@ -4,7 +4,7 @@ import 'languages.dart';
 import 'translation_api.dart';
 
 class Translate extends StatefulWidget {
-  const Translate({Key? key}) : super(key: key);
+  const Translate({super.key});
 
   @override
   _TranslateUIState createState() => _TranslateUIState();
