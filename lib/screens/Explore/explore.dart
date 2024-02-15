@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,6 +17,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   GoogleMapController? _mapController;
   double mapHeight = 0;
   bool isFullScreen = false;
+  bool isLiveLocationOn = false;
 
   LatLng _initialPosition = const LatLng(0, 0);
 
@@ -23,6 +25,8 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
 
   // Create a set of markers
   final Set<Marker> _markers = {};
+
+  Timer? liveLocationTimer;
 
   @override
   bool get wantKeepAlive => true;
@@ -37,18 +41,9 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  void updatePosition() async {
+  void updateMarker() async {
     Position position = await locationController.getPosition();
 
-    // Update the map to the new position
-    _mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: 16.0,
-        ),
-      ),
-    );
     // Add a marker to the new position
     setState(() {
       _markers.clear();
@@ -56,9 +51,46 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
         Marker(
           markerId: const MarkerId('current_position'),
           position: LatLng(position.latitude, position.longitude),
+
         ),
       );
     });
+  }
+
+  void updateCameraPosition() async {
+    Position position = await locationController.getPosition();
+
+    // Get the current zoom level
+    double currentZoomLevel = await _mapController?.getZoomLevel() ?? 16.0;
+
+    // Update the map to the new position
+    _mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: currentZoomLevel,
+        ),
+      ),
+    );
+  }
+
+  void toggleLiveLocation() {
+    if (isLiveLocationOn) {
+      liveLocationTimer?.cancel();
+    } else {
+      liveLocationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+        updateMarker();
+      });
+    }
+    setState(() {
+      isLiveLocationOn = !isLiveLocationOn;
+    });
+  }
+
+  @override
+  void dispose() {
+    liveLocationTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -105,7 +137,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: CameraPosition(
                   target: _initialPosition,
-                  zoom: 11.0,
+                  zoom: 16.0,
                 ),
                 markers: _markers,
               ),
@@ -128,11 +160,20 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                   : SvgPicture.asset('assets/SVG/Pill_down.svg'),
             ),
           ),
+          Positioned(
+            top: 20,
+            left: MediaQuery.of(context).size.width / 2 - 185,
+            child: GestureDetector(
+              onTap: () {
+                toggleLiveLocation();
+                updateCameraPosition();
+              },
+              child: isLiveLocationOn
+                  ? SvgPicture.asset('assets/SVG/LiveOn.svg', height: 30,)
+                  : SvgPicture.asset('assets/SVG/LiveOff.svg', height: 30,),
+            ),
+          ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: updatePosition,
-        child: const Icon(Icons.location_searching),
       ),
     );
   }
