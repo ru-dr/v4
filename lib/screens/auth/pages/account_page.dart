@@ -3,7 +3,7 @@ import 'package:v4/screens/auth/api/auth_api.dart';
 import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({Key? key}) : super(key: key);
+  const AccountPage({super.key});
 
   @override
   _AccountPageState createState() => _AccountPageState();
@@ -99,12 +99,12 @@ class _AccountPageState extends State<AccountPage> {
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: () => savePreferences(),
-                          child: Text(
-                            'Save Preferences',
-                            style: TextStyle(color: Colors.black),
-                          ),
                           style: TextButton.styleFrom(
                             backgroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            'Save Preferences',
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       ]),
