@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:v4/screens/auth/api/auth_api.dart';
 
 class Auth extends StatelessWidget {
-  const Auth({Key? key}) : super(key: key);
+  const Auth({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class Auth extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "Auth",
             style: TextStyle(color: Colors.white),
           ),
@@ -45,14 +45,14 @@ class Auth extends StatelessWidget {
                   const SizedBox(height: 40),
                   if (!isLoggedIn) ...[
                     ElevatedButton(
-                      child:
-                          Text('Login', style: TextStyle(color: Colors.black)),
                       onPressed: () {
                         Navigator.pushNamed(context, '/login');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
+                      child:
+                          const Text('Login', style: TextStyle(color: Colors.black)),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -62,27 +62,27 @@ class Auth extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
-                      child: Text('Register',
+                      child: const Text('Register',
                           style: TextStyle(color: Colors.black)),
                     ),
                   ] else ...[
                     Text(
                       'Welcome back $username!',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      child: Text('Account',
-                          style: TextStyle(color: Colors.black)),
                       onPressed: () {
                         Navigator.pushNamed(context, '/account');
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
+                        backgroundColor: Colors.white,
                       ),
+                      child: const Text('Account',
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ],
@@ -93,7 +93,7 @@ class Auth extends StatelessWidget {
       );
     } catch (_) {
       // If an exception is thrown, navigate to the Auth page
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/login');
       });
       return Container(); // Return an empty container while the navigation is not yet complete
