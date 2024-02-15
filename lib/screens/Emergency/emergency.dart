@@ -41,7 +41,7 @@ class _EmergencyState extends State<Emergency> {
             appBar: AppBar(
                 title: Text(
                   "Emergency",
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 backgroundColor: const Color(0xff0E1219),
                 iconTheme: const IconThemeData(color: Color(0xffffffff)),

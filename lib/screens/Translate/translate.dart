@@ -1,27 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'languages.dart';
+import 'translation_api.dart';
 
 class Translate extends StatefulWidget {
   const Translate({super.key});
 
   @override
-  _TranslateState createState() => _TranslateState();
+  _TranslateUIState createState() => _TranslateUIState();
 }
 
-class _TranslateState extends State<Translate> {
-  final Map<String, String> items = {
-    'A_Item1': 'A1',
-    'A_Item2': 'A2',
-    'A_Item3': 'A3',
-    'A_Item4': 'A4',
-    'B_Item1': 'B1',
-    'B_Item2': 'B2',
-    'B_Item3': 'B3',
-    'B_Item4': 'B4',
-  };
+class _TranslateUIState extends State<Translate> {
+  String? selectedValue1; // English
+  String? selectedValue2; // Hindi
 
-  String? selectedValue;
+  String searchString = '';
+  String resultString = '';
+
   final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController inputTextEditingController =
+      TextEditingController();
+
+  // Common styles and properties
+  final buttonStyleData = ButtonStyleData(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    height: 50,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: Colors.black26,
+      ),
+      color: Colors.white,
+    ),
+  );
+  final dropdownStyleData = const DropdownStyleData(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      color: Color(0xffffffff),
+    ),
+    maxHeight: 300,
+  );
+  final menuItemStyleData = const MenuItemStyleData(
+    height: 50,
+  );
+  late DropdownSearchData<String> dropdownSearchData;
+
+  @override
+  void initState() {
+    super.initState();
+    dropdownSearchData = DropdownSearchData(
+      searchController: textEditingController,
+      searchInnerWidgetHeight: 50,
+      searchInnerWidget: Container(
+        height: 50,
+        padding: const EdgeInsets.only(
+          top: 8,
+          bottom: 8,
+          right: 8,
+          left: 8,
+        ),
+        child: TextFormField(
+          expands: true,
+          maxLines: null,
+          controller: textEditingController,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 8,
+            ),
+            hintText: 'Select a language',
+            hintStyle: const TextStyle(fontSize: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+      ),
+      searchMatchFn: (item, searchValue) {
+        return item.value
+            .toString()
+            .toLowerCase()
+            .contains(searchValue.toLowerCase());
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,115 +107,200 @@ class _TranslateState extends State<Translate> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              DropdownButtonHideUnderline(
-                child: DropdownButton2<String>(
-                  isExpanded: true,
-                  hint: const Text(
-                    'Select Item',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                  items: items.entries
-                      .map((item) => DropdownMenuItem(
-                            value: item.value,
-                            child: Text(
-                              item.key,
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
+          padding: const EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: const Text(
+                            'Pick Language',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
                             ),
-                          ))
-                      .toList(),
-                  value: selectedValue,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  buttonStyleData: ButtonStyleData(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    height: 40,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.black26,
-                      ),
-                      color: Colors.white,
-                    ),
-                  ),
-                  dropdownStyleData: const DropdownStyleData(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color(0xffffffff),
-                    ),
-                    maxHeight: 200,
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                  ),
-                  dropdownSearchData: DropdownSearchData(
-                    searchController: textEditingController,
-                    searchInnerWidgetHeight: 50,
-                    searchInnerWidget: Container(
-                      height: 50,
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 4,
-                        right: 8,
-                        left: 8,
-                      ),
-                      child: TextFormField(
-                        expands: true,
-                        maxLines: null,
-                        controller: textEditingController,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
                           ),
-                          hintText: 'Search for an item...',
-                          hintStyle: const TextStyle(fontSize: 12),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          items: languages.entries
+                              .map((item) => DropdownMenuItem(
+                                    value: item.value,
+                                    child: Text(
+                                      item.value,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          value: selectedValue1,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                selectedValue1 = value;
+                              });
+                            }
+                          },
+                          buttonStyleData: buttonStyleData,
+                          dropdownStyleData: dropdownStyleData,
+                          menuItemStyleData: menuItemStyleData,
+                          dropdownSearchData: dropdownSearchData,
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              textEditingController.clear();
+                            }
+                          },
                         ),
                       ),
                     ),
-                    searchMatchFn: (item, searchValue) {
-                      return item.value
-                          .toString()
-                          .toLowerCase()
-                          .contains(searchValue.toLowerCase());
-                    },
-                  ),
-                  //This to clear the search value when you close the menu
-                  onMenuStateChange: (isOpen) {
-                    if (!isOpen) {
-                      textEditingController.clear();
-                    }
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: const Text(
+                            'Pick Language',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
+                            ),
+                          ),
+                          items: languages.entries
+                              .map((item) => DropdownMenuItem(
+                                    value: item.value,
+                                    child: Text(
+                                      item.value,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          value: selectedValue2,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                selectedValue2 = value;
+                              });
+                            }
+                          },
+                          buttonStyleData: buttonStyleData,
+                          dropdownStyleData: dropdownStyleData,
+                          menuItemStyleData: menuItemStyleData,
+                          dropdownSearchData: dropdownSearchData,
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              textEditingController.clear();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  onChanged: (value) => {
+                    setState(() {
+                      searchString = value;
+                    })
                   },
+                  maxLines: 5,
+                  autocorrect: true,
+                  controller: inputTextEditingController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter text to translate',
+                    hintStyle: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.start,
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Implement your translation logic here
-                },
-                child: const Text('Translate'),
-              ),
-              if (selectedValue != null)
-                Text(
-                  'Selected Key: ${items.entries.firstWhere((element) => element.value == selectedValue).key}\n'
-                  'Selected Value: $selectedValue',
-                  style: Theme.of(context).textTheme.displayMedium,
+                const SizedBox(
+                  height: 20,
                 ),
-            ],
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final value1 = languages.entries
+                          .firstWhere(
+                              (element) => element.value == selectedValue1)
+                          .key;
+                      final value2 = languages.entries
+                          .firstWhere(
+                              (element) => element.value == selectedValue2)
+                          .key;
+
+                      if (searchString.isNotEmpty) {
+                        final response = await fetchTranslation(
+                          searchString.toString(),
+                          fromLanguage: value1.isNotEmpty ? value1 : 'auto',
+                          toLanguage: value2.isNotEmpty ? value2 : 'en',
+                        );
+                        setState(() {
+                          resultString = response;
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xffF7C84C),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.all(12),
+                    ),
+                    child: const Text(
+                      'Translate',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextField(
+                  controller: TextEditingController(text: resultString),
+                  readOnly: true,
+                  maxLines: 5,
+                  autocorrect: true,
+                  decoration: InputDecoration(
+                    hintText: 'Translated Text',
+                    hintStyle: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
           ),
         ),
       ),
