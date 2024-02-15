@@ -65,7 +65,7 @@ class _AccountPageState extends State<AccountPage> {
               icon: const Icon(Icons.logout),
               onPressed: () {
                 signOut();
-                Navigator.pop(context);
+                Navigator.pushNamed(context, '/');
               },
             ),
           ],
