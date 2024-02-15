@@ -4,7 +4,7 @@ import 'package:v4/controllers/location_controller.dart';
 import 'package:shake/shake.dart';
 
 class Emergency extends StatefulWidget {
-  const Emergency({Key? key}) : super(key: key);
+  const Emergency({super.key});
 
   @override
   _EmergencyState createState() => _EmergencyState();
@@ -41,7 +41,7 @@ class _EmergencyState extends State<Emergency> {
             appBar: AppBar(
                 title: Text(
                   "Emergency",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 backgroundColor: const Color(0xff0E1219),
                 iconTheme: const IconThemeData(color: Color(0xffffffff)),
