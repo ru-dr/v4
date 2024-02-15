@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:v4/screens/Home/home.dart';
@@ -10,34 +11,42 @@ import 'package:v4/screens/ticket/ticket.dart';
 import 'package:v4/screens/explore/explore.dart';
 import 'package:v4/screens/auth/auth.dart';
 import 'package:v4/controllers/location_controller.dart';
+import 'package:v4/screens/auth/api/auth_api.dart';
+import 'package:v4/screens/auth/pages/login_page.dart';
+import 'package:v4/screens/auth/pages/register_page.dart';
+import 'package:v4/screens/auth/pages/account_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: ((context) => AuthAPI()),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     Get.put(LocationController());
+    final value = context.watch<AuthAPI>().status;
+    print('TOP CHANGE Value changed to: $value!');
+
     return MaterialApp(
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xff0E1219),
         textTheme: GoogleFonts.interTextTheme(
-          // Use 'Inter' as the default font
           Theme.of(context).textTheme,
         ).copyWith(
           bodySmall: GoogleFonts.syne(
-            // Use 'Syne' for body text
             textStyle: Theme.of(context).textTheme.bodySmall,
             color: Colors.white,
             fontWeight: FontWeight.w600,
             fontSize: 22,
           ),
           displayMedium: GoogleFonts.inter(
-            // Use 'Barlow' for body text
             textStyle: Theme.of(context).textTheme.displayMedium,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -47,16 +56,24 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'v4',
-      initialRoute: '/',
+      initialRoute: "/",
       routes: {
+        '/loading': (context) => const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
         '/': (context) => const Home(),
+        '/auth': (context) => const Auth(),
         '/translate': (context) => const Translate(),
-        '/weather': (context) => const Weather(location: "Mehsana",),
+        '/weather': (context) => const Weather(
+              location: "Mehsana",
+            ),
         '/hospital': (context) => const Hospital(),
         '/emergency': (context) => const Emergency(),
         '/ticket': (context) => const Ticket(),
         '/explore': (context) => const Explore(),
-        '/auth': (context) => const Auth(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/account': (context) => const AccountPage(),
       },
     );
   }
