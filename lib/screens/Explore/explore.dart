@@ -5,6 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:v4/controllers/location_controller.dart';
 import 'package:get/get.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class Explore extends StatefulWidget {
   const Explore({super.key});
@@ -23,6 +25,8 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
 
   final locationController = Get.find<LocationController>();
 
+  final places =
+      GoogleMapsPlaces(apiKey: 'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg');
   // Create a set of markers
   final Set<Marker> _markers = {};
 
@@ -51,7 +55,6 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
         Marker(
           markerId: const MarkerId('current_position'),
           position: LatLng(position.latitude, position.longitude),
-
         ),
       );
     });
@@ -133,13 +136,94 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
-              child: GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _initialPosition,
-                  zoom: 16.0,
-                ),
-                markers: _markers,
+              child: Stack(
+                children: [
+                  GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                      target: _initialPosition,
+                      zoom: 16.0,
+                    ),
+                    markers: _markers,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        toggleLiveLocation();
+                        updateCameraPosition();
+                      },
+                      child: isLiveLocationOn
+                          ? SvgPicture.asset(
+                              'assets/SVG/LiveOn.svg',
+                              height: 30,
+                            )
+                          : SvgPicture.asset(
+                              'assets/SVG/LiveOff.svg',
+                              height: 30,
+                            ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 10),
+                        child: GestureDetector(
+                          onTap: () async {
+                            Prediction? p = await PlacesAutocomplete.show(
+                              context: context,
+                              apiKey: 'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
+                              mode: Mode.overlay, // Mode.fullscreen
+                              language: "en",
+                              components: [Component(Component.country, "us")],
+                            );
+
+                            if (p != null) {
+                              print('Place selected: ${p.description}');
+                              // get detail (lat/lng)
+                              PlacesDetailsResponse detail =
+                                  await places.getDetailsByPlaceId(p.placeId!);
+                              double lat = detail.result.geometry!.location.lat;
+                              double lng = detail.result.geometry!.location.lng;
+                              print('Place details: lat=$lat, lng=$lng');
+
+                              // update the map
+                              _mapController?.animateCamera(
+                                CameraUpdate.newCameraPosition(
+                                  CameraPosition(
+                                    target: LatLng(lat, lng),
+                                    zoom: 16.0,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              print("Prediction is null");
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.search),
+                                  SizedBox(width: 8),
+                                  Text("Search"),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
@@ -158,19 +242,6 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
               child: isFullScreen
                   ? SvgPicture.asset('assets/SVG/Pill_up.svg')
                   : SvgPicture.asset('assets/SVG/Pill_down.svg'),
-            ),
-          ),
-          Positioned(
-            top: 20,
-            left: MediaQuery.of(context).size.width / 2 - 185,
-            child: GestureDetector(
-              onTap: () {
-                toggleLiveLocation();
-                updateCameraPosition();
-              },
-              child: isLiveLocationOn
-                  ? SvgPicture.asset('assets/SVG/LiveOn.svg', height: 30,)
-                  : SvgPicture.asset('assets/SVG/LiveOff.svg', height: 30,),
             ),
           ),
         ],
