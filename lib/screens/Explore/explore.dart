@@ -178,7 +178,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                               apiKey: 'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
                               mode: Mode.overlay, // Mode.fullscreen
                               language: "en",
-                              components: [],
+                              components: [Component(Component.country, "us")],
                             );
 
                             if (p != null) {
