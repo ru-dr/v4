@@ -1,18 +1,46 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 
-class FeedbackForm extends StatefulWidget {
-  const FeedbackForm({super.key});
+class FeedbackForm extends StatelessWidget {
+  const FeedbackForm({Key? key}) : super(key: key);
 
   @override
-  _FeedbackFormState createState() => _FeedbackFormState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xff0E1219),
+      appBar: AppBar(
+        title: Text(
+          "FeedbackForm",
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        backgroundColor: const Color(0xff0E1219),
+        iconTheme: const IconThemeData(color: Color(0xffffffff)),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: const FeedbackFormContent(),
+    );
+  }
 }
 
-class _FeedbackFormState extends State<FeedbackForm> {
+class FeedbackFormContent extends StatefulWidget {
+  const FeedbackFormContent({Key? key}) : super(key: key);
+
+  @override
+  _FeedbackFormContentState createState() => _FeedbackFormContentState();
+}
+
+class _FeedbackFormContentState extends State<FeedbackFormContent> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -59,11 +87,40 @@ class _FeedbackFormState extends State<FeedbackForm> {
           ElevatedButton(
             onPressed: () async {
               final picker = ImagePicker();
-              final pickedFile =
-                  await picker.pickImage(source: ImageSource.gallery);
+              final pickedFile = await showDialog<File>(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: const Text('Select option'),
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () async {
+                          final pickedFile = await picker.pickImage(
+                              source: ImageSource.camera);
+                          if (pickedFile != null) {
+                            Navigator.pop(context, File(pickedFile.path));
+                          }
+                        },
+                        child: const Text('Take a picture'),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () async {
+                          final pickedFile = await picker.pickImage(
+                              source: ImageSource.gallery);
+                          if (pickedFile != null) {
+                            Navigator.pop(context, File(pickedFile.path));
+                          }
+                        },
+                        child: const Text('Choose from gallery'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
               if (pickedFile != null) {
                 setState(() {
-                  _image = File(pickedFile.path);
+                  _image = pickedFile;
                 });
               }
             },

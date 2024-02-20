@@ -7,7 +7,6 @@ import 'package:v4/controllers/location_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:v4/components/Explore/feedbackUploader.dart';
 
 class Explore extends StatefulWidget {
   const Explore({super.key});
@@ -182,9 +181,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                                       'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
                                   mode: Mode.overlay, // Mode.fullscreen
                                   language: "en",
-                                  components: [
-                                    Component(Component.country, "us")
-                                  ],
+                                  components: [],
                                 );
 
                                 if (p != null) {
@@ -254,7 +251,12 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
               ),
             ],
           ),
-          FeedbackForm()
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/feedback');
+            },
+            child: Text('Go to Feedback'),
+          ),
         ],
       ),
     );
