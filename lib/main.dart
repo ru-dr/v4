@@ -9,12 +9,14 @@ import 'package:v4/screens/hospital/hospital.dart';
 import 'package:v4/screens/emergency/emergency.dart';
 import 'package:v4/screens/ticket/ticket.dart';
 import 'package:v4/screens/explore/explore.dart';
+import 'package:v4/screens/feedback/feedback.dart';
 import 'package:v4/screens/auth/auth.dart';
 import 'package:v4/controllers/location_controller.dart';
 import 'package:v4/screens/auth/api/auth_api.dart';
 import 'package:v4/screens/auth/pages/login_page.dart';
 import 'package:v4/screens/auth/pages/register_page.dart';
 import 'package:v4/screens/auth/pages/account_page.dart';
+
 
 void main() {
   runApp(
@@ -72,6 +74,7 @@ class MyApp extends StatelessWidget {
         '/ticket': (context) => const Ticket(),
         '/explore': (context) => const Explore(),
         '/login': (context) => const LoginPage(),
+        '/feedback': (context) => const FeedbackForm(),
         '/register': (context) => const RegisterPage(),
         '/account': (context) => const AccountPage(),
       },

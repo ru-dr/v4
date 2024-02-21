@@ -124,127 +124,143 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
               Navigator.pop(context);
             },
           )),
-      body: Stack(
-        children: <Widget>[
-          AnimatedContainer(
-            duration: const Duration(seconds: 1),
-            curve: Curves.ease,
-            height: mapHeight,
-            margin: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: Stack(
-                children: [
-                  GoogleMap(
-                    onMapCreated: _onMapCreated,
-                    initialCameraPosition: CameraPosition(
-                      target: _initialPosition,
-                      zoom: 16.0,
+      body: SingleChildScrollView(
+        child:
+          Column(
+            children: [
+              Stack(
+                children: <Widget>[
+                  AnimatedContainer(
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.ease,
+                    height: mapHeight,
+                    margin: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                    markers: _markers,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    child: GestureDetector(
-                      onTap: () {
-                        toggleLiveLocation();
-                        updateCameraPosition();
-                      },
-                      child: isLiveLocationOn
-                          ? SvgPicture.asset(
-                              'assets/SVG/LiveOn.svg',
-                              height: 30,
-                            )
-                          : SvgPicture.asset(
-                              'assets/SVG/LiveOff.svg',
-                              height: 30,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Stack(
+                        children: [
+                          GoogleMap(
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: _initialPosition,
+                              zoom: 16.0,
                             ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 10),
-                        child: GestureDetector(
-                          onTap: () async {
-                            Prediction? p = await PlacesAutocomplete.show(
-                              context: context,
-                              apiKey: 'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
-                              mode: Mode.overlay, // Mode.fullscreen
-                              language: "en",
-                              components: [Component(Component.country, "us")],
-                            );
-
-                            if (p != null) {
-                              print('Place selected: ${p.description}');
-                              // get detail (lat/lng)
-                              PlacesDetailsResponse detail =
-                                  await places.getDetailsByPlaceId(p.placeId!);
-                              double lat = detail.result.geometry!.location.lat;
-                              double lng = detail.result.geometry!.location.lng;
-                              print('Place details: lat=$lat, lng=$lng');
-
-                              // update the map
-                              _mapController?.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  CameraPosition(
-                                    target: LatLng(lat, lng),
-                                    zoom: 16.0,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              print("Prediction is null");
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.search),
-                                  SizedBox(width: 8),
-                                  Text("Search"),
-                                ],
-                              ),
+                            markers: _markers,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                toggleLiveLocation();
+                                updateCameraPosition();
+                              },
+                              child: isLiveLocationOn
+                                  ? SvgPicture.asset(
+                                      'assets/SVG/LiveOn.svg',
+                                      height: 30,
+                                    )
+                                  : SvgPicture.asset(
+                                      'assets/SVG/LiveOff.svg',
+                                      height: 30,
+                                    ),
                             ),
                           ),
-                        ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    Prediction? p = await PlacesAutocomplete.show(
+                                      context: context,
+                                      apiKey:
+                                          'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
+                                      mode: Mode.overlay, // Mode.fullscreen
+                                      language: "en",
+                                      components: [],
+                                    );
+          
+                                    if (p != null) {
+                                      print('Place selected: ${p.description}');
+                                      // get detail (lat/lng)
+                                      PlacesDetailsResponse detail = await places
+                                          .getDetailsByPlaceId(p.placeId!);
+                                      double lat =
+                                          detail.result.geometry!.location.lat;
+                                      double lng =
+                                          detail.result.geometry!.location.lng;
+                                      print('Place details: lat=$lat, lng=$lng');
+          
+                                      // update the map
+                                      _mapController?.animateCamera(
+                                        CameraUpdate.newCameraPosition(
+                                          CameraPosition(
+                                            target: LatLng(lat, lng),
+                                            zoom: 16.0,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      print("Prediction is null");
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.search),
+                                          SizedBox(width: 8),
+                                          Text("Search"),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    left: MediaQuery.of(context).size.width / 2 - 25,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isFullScreen = !isFullScreen;
+                          mapHeight = isFullScreen
+                              ? MediaQuery.of(context).size.height
+                              : MediaQuery.of(context).size.height / 2.5;
+                        });
+                      },
+                      child: isFullScreen
+                          ? SvgPicture.asset('assets/SVG/Pill_up.svg')
+                          : SvgPicture.asset('assets/SVG/Pill_down.svg'),
+                    ),
                   ),
                 ],
               ),
-            ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/feedback');
+                },
+                child: const Text('Go to Feedback'),
+              ),
+            ],
           ),
-          Positioned(
-            bottom: 10,
-            left: MediaQuery.of(context).size.width / 2 - 25,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isFullScreen = !isFullScreen;
-                  mapHeight = isFullScreen
-                      ? MediaQuery.of(context).size.height
-                      : MediaQuery.of(context).size.height / 2.5;
-                });
-              },
-              child: isFullScreen
-                  ? SvgPicture.asset('assets/SVG/Pill_up.svg')
-                  : SvgPicture.asset('assets/SVG/Pill_down.svg'),
-            ),
-          ),
-        ],
       ),
     );
   }

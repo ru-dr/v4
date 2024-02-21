@@ -45,6 +45,8 @@ dependencies:
   provider: ^6.1.1
   appwrite: ^11.0.1
   flutter_google_places_hoc081098: ^1.2.0
+  image_picker: ^1.0.7
+  cloudinary_public: ^0.23.1
 
 dependency_overrides:
   http: ^0.13.1
