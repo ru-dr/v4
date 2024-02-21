@@ -79,17 +79,17 @@ class _EmergencyState extends State<Emergency> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               'Emergency Contact: $contactNumber',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,
                               ),
                               textAlign: TextAlign.center,
                             ),
                           );
-                        }).toList(),
+                        }),
                       if (emergencyContactNumbers.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             'No emergency contact numbers found for this location.',
                             style: TextStyle(
