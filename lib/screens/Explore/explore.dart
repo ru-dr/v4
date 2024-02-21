@@ -257,7 +257,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                 onPressed: () {
                   Navigator.pushNamed(context, '/feedback');
                 },
-                child: Text('Go to Feedback'),
+                child: const Text('Go to Feedback'),
               ),
             ],
           ),

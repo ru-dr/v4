@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 
 class FeedbackForm extends StatelessWidget {
-  const FeedbackForm({Key? key}) : super(key: key);
+  const FeedbackForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class FeedbackForm extends StatelessWidget {
 }
 
 class FeedbackFormContent extends StatefulWidget {
-  const FeedbackFormContent({Key? key}) : super(key: key);
+  const FeedbackFormContent({super.key});
 
   @override
   _FeedbackFormContentState createState() => _FeedbackFormContentState();
@@ -56,7 +56,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
         children: <Widget>[
           TextFormField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: 'Name'),
+            decoration: const InputDecoration(labelText: 'Name'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your name';
@@ -66,7 +66,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
           ),
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(labelText: 'Email'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
@@ -76,7 +76,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
           ),
           TextFormField(
             controller: _feedbackController,
-            decoration: InputDecoration(labelText: 'Feedback'),
+            decoration: const InputDecoration(labelText: 'Feedback'),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your feedback';
@@ -124,7 +124,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
                 });
               }
             },
-            child: Text('Upload Image'),
+            child: const Text('Upload Image'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -132,7 +132,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
                 _submitForm();
               }
             },
-            child: Text('Submit'),
+            child: const Text('Submit'),
           ),
         ],
       ),
@@ -151,7 +151,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
 
       if (_imageUrl != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Image uploaded to Cloudinary'),
             duration: Duration(seconds: 2),
           ),
