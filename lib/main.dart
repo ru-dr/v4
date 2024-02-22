@@ -17,7 +17,6 @@ import 'package:v4/screens/auth/pages/login_page.dart';
 import 'package:v4/screens/auth/pages/register_page.dart';
 import 'package:v4/screens/auth/pages/account_page.dart';
 
-
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -42,19 +41,24 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(
           Theme.of(context).textTheme,
         ).copyWith(
-          bodySmall: GoogleFonts.syne(
-            textStyle: Theme.of(context).textTheme.bodySmall,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 22,
-          ),
-          displayMedium: GoogleFonts.inter(
-            textStyle: Theme.of(context).textTheme.displayMedium,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        ),
+            bodySmall: GoogleFonts.syne(
+              textStyle: Theme.of(context).textTheme.bodySmall,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+            ),
+            displayMedium: GoogleFonts.inter(
+              textStyle: Theme.of(context).textTheme.displayMedium,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+              color: Colors.white,
+            ),
+            displaySmall: GoogleFonts.inter(
+              textStyle: Theme.of(context).textTheme.displaySmall,
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              color: Colors.white,
+            )),
       ),
       debugShowCheckedModeBanner: false,
       title: 'v4',

@@ -13,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+  final usernameTextController = TextEditingController();
 
   createAccount() async {
     showDialog(
@@ -33,10 +34,12 @@ class _RegisterPageState extends State<RegisterPage> {
       await appwrite.createUser(
         email: emailTextController.text,
         password: passwordTextController.text,
+        username: usernameTextController.text,
       );
-      Navigator.pop(context);
       const snackbar = SnackBar(content: Text('Account created!'));
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, '/login');
     } on AppwriteException catch (e) {
       Navigator.pop(context);
       showAlert(title: 'Account creation failed', text: e.message.toString());
@@ -102,11 +105,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 16),
+              TextField(
+                controller: usernameTextController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () {
                   createAccount();
                 },
-                icon: const Icon(Icons.app_registration),
+                icon: const Icon(Icons.login_rounded),
                 label: const Text('Sign up'),
               ),
             ],
