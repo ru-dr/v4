@@ -54,13 +54,15 @@ class AuthAPI extends ChangeNotifier {
   }
 
   Future<User> createUser(
-      {required String email, required String password}) async {
+      {required String email,
+      required String password,
+      required String username}) async {
     try {
       final user = await account.create(
           userId: ID.unique(),
           email: email,
           password: password,
-          name: 'Simon G');
+          name: username);
       return user;
     } finally {
       notifyListeners();
@@ -104,7 +106,20 @@ class AuthAPI extends ChangeNotifier {
     return await account.getPrefs();
   }
 
-  updatePreferences({required String bio}) async {
-    return account.updatePrefs(prefs: {'bio': bio});
+  updatePreferences(
+      {required String bio,
+      required String age,
+      required String image,
+      required String location,
+      required String gender,
+      required String interests}) async {
+    return account.updatePrefs(prefs: {
+      'bio': bio,
+      'age': age,
+      'image': image,
+      'location': location,
+      'interests': interests, // corrected spelling
+      'gender': gender
+    });
   }
 }

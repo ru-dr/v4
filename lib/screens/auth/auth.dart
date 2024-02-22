@@ -14,10 +14,7 @@ class Auth extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            "Auth",
-            style: TextStyle(color: Colors.white),
-          ),
+          title: Text("Auth", style: Theme.of(context).textTheme.bodySmall),
           backgroundColor: const Color(0xff0E1219),
           iconTheme: const IconThemeData(color: Color(0xffffffff)),
           centerTitle: true,
@@ -35,14 +32,6 @@ class Auth extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
-                    "Auth",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  const SizedBox(height: 40),
                   if (!isLoggedIn) ...[
                     ElevatedButton(
                       onPressed: () {
@@ -51,8 +40,8 @@ class Auth extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
-                      child:
-                          const Text('Login', style: TextStyle(color: Colors.black)),
+                      child: const Text('Login',
+                          style: TextStyle(color: Colors.black)),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -81,7 +70,7 @@ class Auth extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
-                      child: const Text('Account',
+                      child: const Text('Profile',
                           style: TextStyle(color: Colors.black)),
                     ),
                   ],
