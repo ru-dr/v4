@@ -24,7 +24,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   bool isFullScreen = false;
   bool isLiveLocationOn = false;
 
-  LatLng _initialPosition = const LatLng(0, 0);
+  final LatLng _initialPosition = const LatLng(0, 0);
 
   final locationController = Get.find<LocationController>();
 
@@ -304,7 +304,14 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                     onPressed: () {
                       Navigator.pushNamed(context, '/feedback');
                     },
-                    child: const Text('Go to Feedback'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff8AE990),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    child: const Text('Go to Feedback',  style: TextStyle(color: Colors.black),),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -318,7 +325,14 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                         scores = newScores;
                       });
                     },
-                    child: const Text('Fetch Score'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff8AE990),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    child: const Text('Fetch Score',  style: TextStyle(color: Colors.black)),
                   ),
                 ],
               ),
@@ -330,7 +344,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               height: 100,
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 4, 7, 28),
+                color: const Color.fromARGB(255, 4, 7, 28),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(

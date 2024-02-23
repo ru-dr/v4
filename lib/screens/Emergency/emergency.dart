@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:v4/controllers/location_controller.dart';
 import 'package:shake/shake.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Emergency extends StatefulWidget {
   const Emergency({super.key});
@@ -76,14 +77,21 @@ class _EmergencyState extends State<Emergency> {
                       if (emergencyContactNumbers.isNotEmpty)
                         ...emergencyContactNumbers.map((contactNumber) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text(
-                              'Emergency Contact: $contactNumber',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: ElevatedButton(
+                              onPressed: () => launch('tel:$contactNumber'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: const BorderSide(color: Colors.white),
+                                ),
                               ),
-                              textAlign: TextAlign.center,
+                              child: Text(
+                                'Emergency Contact: $contactNumber',
+                                 style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255))
+                              ),
                             ),
                           );
                         }),

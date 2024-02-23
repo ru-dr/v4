@@ -101,7 +101,7 @@ class _AccountPageState extends State<AccountPage> {
                       ? NetworkImage(imageTextController.text)
                       : null,
                   child: imageTextController.text.isEmpty
-                      ? CircularProgressIndicator() // Show loading indicator while image is loading
+                      ? const CircularProgressIndicator() // Show loading indicator while image is loading
                       : null,
                 ),
               const SizedBox(height: 14),

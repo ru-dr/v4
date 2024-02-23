@@ -92,33 +92,67 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: emailTextController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                 ),
+                style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: passwordTextController,
                 decoration: const InputDecoration(
                   labelText: 'Password',
+                  labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                 ),
+                style: const TextStyle(color: Colors.white),
                 obscureText: true,
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: usernameTextController,
                 decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
+                labelText: 'Username',
+                labelStyle: TextStyle(color: Colors.white),
+                border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
                 ),
               ),
+              style: const TextStyle(color: Colors.white),
+            ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () {
                   createAccount();
                 },
-                icon: const Icon(Icons.login_rounded),
-                label: const Text('Sign up'),
+                icon: const Icon(Icons.login_rounded, color: Colors.white),
+                label: const Text(
+                  'Sign up',
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff0E1219),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(color: Colors.white),
+                  ),
+                ),
               ),
             ],
           ),

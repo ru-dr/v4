@@ -136,53 +136,60 @@ class _LoginFormState extends State<LoginForm> {
               onPressed: () {
                 signIn(context);
               },
-              icon: const Icon(Icons.login),
-              label: const Text("Sign in"),
+              icon: const Icon(Icons.login, color: Colors.white),
+              label: const Text("Sign in",  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff0E1219),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(color: Colors.white),
+                  ),
+                ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
               },
-              child: const Text('Create Account'),
+              child: const Text('Create Account',  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                  ),
-                  child: SvgPicture.asset('assets/google_icon.svg', width: 12),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                  ),
-                  child: SvgPicture.asset('assets/apple_icon.svg', width: 12),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                  ),
-                  child: SvgPicture.asset('assets/github_icon.svg', width: 12),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                  ),
-                  child: SvgPicture.asset('assets/twitter_icon.svg', width: 12),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     ElevatedButton(
+            //       onPressed: () {},
+            //       style: ElevatedButton.styleFrom(
+            //         foregroundColor: Colors.black,
+            //         backgroundColor: Colors.white,
+            //       ),
+            //       child: SvgPicture.asset('assets/google_icon.svg', width: 12),
+            //     ),
+            //     ElevatedButton(
+            //       onPressed: () {},
+            //       style: ElevatedButton.styleFrom(
+            //         foregroundColor: Colors.black,
+            //         backgroundColor: Colors.white,
+            //       ),
+            //       child: SvgPicture.asset('assets/apple_icon.svg', width: 12),
+            //     ),
+            //     ElevatedButton(
+            //       onPressed: () {},
+            //       style: ElevatedButton.styleFrom(
+            //         foregroundColor: Colors.black,
+            //         backgroundColor: Colors.white,
+            //       ),
+            //       child: SvgPicture.asset('assets/github_icon.svg', width: 12),
+            //     ),
+            //     ElevatedButton(
+            //       onPressed: () {},
+            //       style: ElevatedButton.styleFrom(
+            //         foregroundColor: Colors.black,
+            //         backgroundColor: Colors.white,
+            //       ),
+            //       child: SvgPicture.asset('assets/twitter_icon.svg', width: 12),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
