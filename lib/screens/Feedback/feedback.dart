@@ -72,7 +72,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
                     labelStyle: TextStyle(color: Colors.white),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white))),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
@@ -91,7 +91,7 @@ class _FeedbackFormContentState extends State<FeedbackFormContent> {
                     labelStyle: TextStyle(color: Colors.white),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white))),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';

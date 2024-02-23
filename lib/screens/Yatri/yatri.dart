@@ -103,9 +103,9 @@ class _YatriState extends State<Yatri> {
                 ),
                 IconButton(
                   style: ButtonStyle(
-                    padding: MaterialStateProperty.all(EdgeInsets.all(16)),
+                    padding: MaterialStateProperty.all(const EdgeInsets.all(16)),
                     backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Color.fromARGB(255, 41, 105, 214)),
+                        (states) => const Color.fromARGB(255, 41, 105, 214)),
                   ),
                   icon: SvgPicture.asset(
                     'assets/SVG/tick.svg',
@@ -144,9 +144,9 @@ class ChatBubble extends StatelessWidget {
             children: [
               if (!message.isUser) ...[
                 CircleAvatar(
-                  child: SvgPicture.asset('assets/SVG/messages.svg'),
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   radius: 20,
+                  child: SvgPicture.asset('assets/SVG/messages.svg'),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -166,9 +166,9 @@ class ChatBubble extends StatelessWidget {
               if (message.isUser) ...[
                 const SizedBox(width: 8),
                 CircleAvatar(
-                  child: SvgPicture.asset('assets/SVG/user.svg'),
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                   radius: 20,
+                  child: SvgPicture.asset('assets/SVG/user.svg'),
                 ),
               ],
             ],
