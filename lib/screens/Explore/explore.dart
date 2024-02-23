@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:v4/controllers/location_controller.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:google_maps_webservice/places.dart';
 
@@ -35,14 +38,51 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  @override
-  void initState() {
-    super.initState();
-    locationController.getPosition().then((Position position) {
-      setState(() {
-        _initialPosition = LatLng(position.latitude, position.longitude);
-      });
-    });
+  Future<String> fetchCity(double lat, double lng) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+    Placemark place = placemarks[0];
+    if (place.administrativeArea != null) {
+      return place.administrativeArea!;
+    } else {
+      return place.subAdministrativeArea!;
+    }
+  }
+
+  Future<List<int>> fetchScore(String city) async {
+    final response = await http.get(
+      Uri.parse(
+          'http://v3-server.vercel.app/senseScore/$city/?api_key=247da0f7b7f3bfcbea1b73a401cb426f'),
+    );
+
+    print('Response status code: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final scoresData = data['score'][0] as List<dynamic>;
+
+      final positiveScore = scoresData[0]['score'] as double;
+      final negativeScore = scoresData[1]['score'] as double;
+      final neutralScore = scoresData[2]['score'] as double;
+
+      int positiveScorePercentage = (positiveScore * 100).toInt();
+      int negativeScorePercentage = (negativeScore * 100).toInt();
+      int neutralScorePercentage = (neutralScore * 100).toInt();
+
+      print('Positive: $positiveScorePercentage');
+      print('Negative: $negativeScorePercentage');
+      print('Neutral: $neutralScorePercentage');
+
+      scores = [
+        positiveScorePercentage,
+        negativeScorePercentage,
+        neutralScorePercentage
+      ];
+    } else {
+      print('Failed to load score');
+    }
+
+    return scores;
   }
 
   void updateMarker() async {
@@ -106,6 +146,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
     _mapController = controller;
   }
 
+  List<int> scores = [0, 0, 0]; // Positive, Negative, Neutral scores
   @override
   Widget build(BuildContext context) {
     super.build(context); // Add this line
@@ -125,142 +166,192 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
             },
           )),
       body: SingleChildScrollView(
-        child:
-          Column(
-            children: [
-              Stack(
-                children: <Widget>[
-                  AnimatedContainer(
-                    duration: const Duration(seconds: 1),
-                    curve: Curves.ease,
-                    height: mapHeight,
-                    margin: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Stack(
-                        children: [
-                          GoogleMap(
-                            onMapCreated: _onMapCreated,
-                            initialCameraPosition: CameraPosition(
-                              target: _initialPosition,
-                              zoom: 16.0,
-                            ),
-                            markers: _markers,
+        child: Column(
+          children: [
+            Stack(
+              children: <Widget>[
+                AnimatedContainer(
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.ease,
+                  height: mapHeight,
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Stack(
+                      children: [
+                        GoogleMap(
+                          onMapCreated: _onMapCreated,
+                          initialCameraPosition: CameraPosition(
+                            target: _initialPosition,
+                            zoom: 16.0,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                toggleLiveLocation();
-                                updateCameraPosition();
-                              },
-                              child: isLiveLocationOn
-                                  ? SvgPicture.asset(
-                                      'assets/SVG/LiveOn.svg',
-                                      height: 30,
-                                    )
-                                  : SvgPicture.asset(
-                                      'assets/SVG/LiveOff.svg',
-                                      height: 30,
-                                    ),
-                            ),
+                          markers: _markers,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          child: GestureDetector(
+                            onTap: () {
+                              toggleLiveLocation();
+                              updateCameraPosition();
+                            },
+                            child: isLiveLocationOn
+                                ? SvgPicture.asset(
+                                    'assets/SVG/LiveOn.svg',
+                                    height: 30,
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/SVG/LiveOff.svg',
+                                    height: 30,
+                                  ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    Prediction? p = await PlacesAutocomplete.show(
-                                      context: context,
-                                      apiKey:
-                                          'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
-                                      mode: Mode.overlay, // Mode.fullscreen
-                                      language: "en",
-                                      components: [],
-                                    );
-          
-                                    if (p != null) {
-                                      print('Place selected: ${p.description}');
-                                      // get detail (lat/lng)
-                                      PlacesDetailsResponse detail = await places
-                                          .getDetailsByPlaceId(p.placeId!);
-                                      double lat =
-                                          detail.result.geometry!.location.lat;
-                                      double lng =
-                                          detail.result.geometry!.location.lng;
-                                      print('Place details: lat=$lat, lng=$lng');
-          
-                                      // update the map
-                                      _mapController?.animateCamera(
-                                        CameraUpdate.newCameraPosition(
-                                          CameraPosition(
-                                            target: LatLng(lat, lng),
-                                            zoom: 16.0,
-                                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  Prediction? p = await PlacesAutocomplete.show(
+                                    context: context,
+                                    apiKey:
+                                        'AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
+                                    mode: Mode.overlay, // Mode.fullscreen
+                                    language: "en",
+                                    components: [],
+                                  );
+
+                                  if (p != null) {
+                                    print('Place selected: ${p.description}');
+                                    // get detail (lat/lng)
+                                    PlacesDetailsResponse detail = await places
+                                        .getDetailsByPlaceId(p.placeId!);
+                                    double lat =
+                                        detail.result.geometry!.location.lat;
+                                    double lng =
+                                        detail.result.geometry!.location.lng;
+                                    print('Place details: lat=$lat, lng=$lng');
+
+                                    // update the map
+                                    _mapController?.animateCamera(
+                                      CameraUpdate.newCameraPosition(
+                                        CameraPosition(
+                                          target: LatLng(lat, lng),
+                                          zoom: 16.0,
                                         ),
-                                      );
-                                    } else {
-                                      print("Prediction is null");
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.search),
-                                          SizedBox(width: 8),
-                                          Text("Search"),
-                                        ],
                                       ),
+                                    );
+                                  } else {
+                                    print("Prediction is null");
+                                  }
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.search),
+                                        SizedBox(width: 8),
+                                        Text("Search"),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    bottom: 10,
-                    left: MediaQuery.of(context).size.width / 2 - 25,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isFullScreen = !isFullScreen;
-                          mapHeight = isFullScreen
-                              ? MediaQuery.of(context).size.height
-                              : MediaQuery.of(context).size.height / 2.5;
-                        });
-                      },
-                      child: isFullScreen
-                          ? SvgPicture.asset('assets/SVG/Pill_up.svg')
-                          : SvgPicture.asset('assets/SVG/Pill_down.svg'),
+                ),
+                Positioned(
+                  bottom: 10,
+                  left: MediaQuery.of(context).size.width / 2 - 25,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isFullScreen = !isFullScreen;
+                        mapHeight = isFullScreen
+                            ? MediaQuery.of(context).size.height
+                            : MediaQuery.of(context).size.height / 2.5;
+                      });
+                    },
+                    child: isFullScreen
+                        ? SvgPicture.asset('assets/SVG/Pill_up.svg')
+                        : SvgPicture.asset('assets/SVG/Pill_down.svg'),
+                  ),
+                ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/feedback');
+              },
+              child: const Text('Go to Feedback'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Position position = await locationController.getPosition();
+                String city =
+                    await fetchCity(position.latitude, position.longitude);
+                List<int> newScores = await fetchScore(city);
+                print('City: $city');
+                setState(() {
+                  scores = newScores;
+                });
+              },
+              child: const Text('Fetch City'),
+            ),
+            // Create a rectungular bar consider it as 100% and divide it into 3 parts and fill the parts with the color based on the score percentage
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 20,
+                    color: Colors.green,
+                    child: Text(
+                      '${scores[0]}%',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    height: 20,
+                    color: Colors.red,
+                    child: Text(
+                      '${scores[1]}%',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    height: 20,
+                    color: Colors.grey,
+                    child: Text(
+                      '${scores[2]}%',
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/feedback');
-                },
-                child: const Text('Go to Feedback'),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }
