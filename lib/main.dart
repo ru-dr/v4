@@ -7,7 +7,7 @@ import 'package:v4/screens/translate/translate.dart';
 import 'package:v4/screens/weather/weather.dart';
 import 'package:v4/screens/hospital/hospital.dart';
 import 'package:v4/screens/emergency/emergency.dart';
-import 'package:v4/screens/ticket/ticket.dart';
+import 'package:v4/screens/yatri/yatri.dart';
 import 'package:v4/screens/explore/explore.dart';
 import 'package:v4/screens/feedback/feedback.dart';
 import 'package:v4/screens/auth/auth.dart';
@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
             ),
         '/hospital': (context) => const Hospital(),
         '/emergency': (context) => const Emergency(),
-        '/ticket': (context) => const Ticket(),
+        '/yatri': (context) => const Yatri(),
         '/explore': (context) => const Explore(),
         '/login': (context) => const LoginPage(),
         '/feedback': (context) => const FeedbackForm(),
