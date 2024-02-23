@@ -294,59 +294,134 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/feedback');
-              },
-              child: const Text('Go to Feedback'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Position position = await locationController.getPosition();
-                String city =
-                    await fetchCity(position.latitude, position.longitude);
-                List<int> newScores = await fetchScore(city);
-                print('City: $city');
-                setState(() {
-                  scores = newScores;
-                });
-              },
-              child: const Text('Fetch City'),
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/feedback');
+                    },
+                    child: const Text('Go to Feedback'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Position position =
+                          await locationController.getPosition();
+                      String city = await fetchCity(
+                          position.latitude, position.longitude);
+                      List<int> newScores = await fetchScore(city);
+                      print('City: $city');
+                      setState(() {
+                        scores = newScores;
+                      });
+                    },
+                    child: const Text('Fetch Score'),
+                  ),
+                ],
+              ),
             ),
             // Create a rectungular bar consider it as 100% and divide it into 3 parts and fill the parts with the color based on the score percentage
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              // Add the same margin as the map container
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              height: 100,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 4, 7, 28),
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    width: 100,
-                    height: 20,
-                    color: Colors.green,
-                    child: Text(
-                      '${scores[0]}%',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    width: 100,
-                    height: 20,
-                    color: Colors.red,
-                    child: Text(
-                      '${scores[1]}%',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    width: 100,
-                    height: 20,
-                    color: Colors.grey,
-                    child: Text(
-                      '${scores[2]}%',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  Expanded(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text('Yatrazen Score of current location:',
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                      Container(
+                        height: 10,
+                        margin: const EdgeInsetsDirectional.only(
+                            start: 20, end: 20),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: const [
+                              Colors.green,
+                              Colors.yellow,
+                              Colors.red
+                            ],
+                            stops: [
+                              scores[0] /
+                                  100, // Adjust the stop according to your score
+                              (scores[0] + scores[1]) / 100,
+                              1.0,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                  width: 10,
+                                  height: 10,
+                                  margin: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
+                              const Text(
+                                'Positive',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.green),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                  width: 10,
+                                  height: 10,
+                                  margin: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
+                              const Text(
+                                'Neutral',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.yellow),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                margin: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const Text(
+                                'Negative',
+                                style:
+                                    TextStyle(fontSize: 12, color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  )),
                 ],
               ),
             ),
