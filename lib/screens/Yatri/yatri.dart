@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class Yatri extends StatefulWidget {
-  const Yatri({Key? key}) : super(key: key);
+  const Yatri({super.key});
 
   @override
   _YatriState createState() => _YatriState();
@@ -23,14 +24,14 @@ class _YatriState extends State<Yatri> {
     _model = GenerativeModel(
       model: 'gemini-pro',
       apiKey: apiKey,
-      generationConfig: GenerationConfig(maxOutputTokens: 500),
+      generationConfig: GenerationConfig(maxOutputTokens: 300),
     );
     _chat = _model.startChat(history: [
       Content.text(
-          'Hi, I am Yatri, your travel assistant. How can I help you today?'),
+          'Hi, I am Yatri, your travel assistant. Your safety and satisfaction are my top priority. How can I help you today?'),
       Content.model([
         TextPart(
-            "YatraZen's own AI yatri is Based on Gemini Pro & here to help you with your travel queries")
+            "The user's satisfaction & safety is yatri's top priority. We are here to help you with your travel queries. Please feel free to ask any questions.")
       ])
     ]);
   }
@@ -56,13 +57,16 @@ class _YatriState extends State<Yatri> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Yatri AI",
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text("Yatri AI", style: Theme.of(context).textTheme.bodySmall),
+        backgroundColor: const Color(0xff0E1219),
+        iconTheme: const IconThemeData(color: Color(0xffffffff)),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -83,20 +87,31 @@ class _YatriState extends State<Yatri> {
                       color: Colors.grey[900],
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: TextField(
                       controller: _controller,
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
-                        hintText: 'Enter your message',
+                        hintText: 'Ask Anything to Yatri 😃',
                         hintStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
                       ),
+                      onSubmitted: (text) => sendMessage(text),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(EdgeInsets.all(16)),
+                    backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Color.fromARGB(255, 41, 105, 214)),
+                  ),
+                  icon: SvgPicture.asset(
+                    'assets/SVG/tick.svg',
+                    width: 24,
+                    height: 24,
+                  ), // Removed 'const' here
                   onPressed: () => sendMessage(_controller.text),
                 ),
               ],
@@ -111,7 +126,7 @@ class _YatriState extends State<Yatri> {
 class ChatBubble extends StatelessWidget {
   final ChatMessage message;
 
-  const ChatBubble({required this.message});
+  const ChatBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +140,12 @@ class ChatBubble extends StatelessWidget {
             mainAxisAlignment: message.isUser
                 ? MainAxisAlignment.end
                 : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!message.isUser) ...[
-                const CircleAvatar(
-                  backgroundImage: AssetImage('assets/bot_image.png'),
+                CircleAvatar(
+                  child: SvgPicture.asset('assets/SVG/messages.svg'),
+                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
                   radius: 20,
                 ),
                 const SizedBox(width: 8),
@@ -149,7 +166,8 @@ class ChatBubble extends StatelessWidget {
               if (message.isUser) ...[
                 const SizedBox(width: 8),
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/user_image.png'),
+                  child: SvgPicture.asset('assets/SVG/user.svg'),
+                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
                   radius: 20,
                 ),
               ],

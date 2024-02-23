@@ -24,7 +24,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
   bool isFullScreen = false;
   bool isLiveLocationOn = false;
 
-  LatLng _initialPosition = const LatLng(0, 0);
+  final LatLng _initialPosition = const LatLng(0, 0);
 
   final locationController = Get.find<LocationController>();
 
@@ -330,7 +330,7 @@ class _ExploreState extends State<Explore> with AutomaticKeepAliveClientMixin {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               height: 100,
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 4, 7, 28),
+                color: const Color.fromARGB(255, 4, 7, 28),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
