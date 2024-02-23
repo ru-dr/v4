@@ -1,7 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:v4/screens/auth/api/auth_api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
