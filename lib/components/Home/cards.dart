@@ -74,8 +74,7 @@ class Cards extends StatelessWidget {
             CustomCard(
               svgIcon: 'assets/SVG/ticket.svg',
               onTap: () {
-                // redirect to translate page
-                Navigator.pushNamed(context, '/ticket');
+                Navigator.pushNamed(context, '/yatri');
               },
               flex: 1,
               color: const Color(0xffffffff),
@@ -122,8 +121,8 @@ class CustomCard extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   svgIcon,
-                  width: 50,
-                  height: 50,
+                  width: 55,
+                  height: 55,
                 ),
                 if (text != null) ...[
                   // Only render Text widget if text is not null
