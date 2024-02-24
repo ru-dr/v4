@@ -53,6 +53,10 @@ Promote hospitality with the ethos of "Athithi Devo Bhava."
 
 <img src="https://ucarecdn.com/1c53f2b7-4a42-4e6a-b4c0-ad298bbba937/-/scale_crop/838x1264/-/format/auto/-/quality/best/" width="560">
 
+## How To Run App
+
+- You Can Download the app from [`Release v4.0.6b`](https://github.com/ru-dr/v4/releases/download/Pre-Release/app-release.apk)
+
 ## Sponsors
 
 We extend our heartfelt gratitude to our sponsors who support the development of YatraZen:
