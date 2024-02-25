@@ -42,12 +42,12 @@ Promote hospitality with the ethos of "Athithi Devo Bhava."
 
 ## Technology Stack
 
-- **React Native (for iOS/Android)**
-- **Expo CLI (Android and iOS SDKs)**
+- **Flutter / React Native (for iOS/Android)**
+- **Dart / Expo CLI (Android and iOS SDKs)**
 - **NextJS 13.5 (for Web app)**
 - **MongoDB / Supabase (database)**
 - **Axios and Express (API Endpoints)**
-- **OAuth ( Google ,Clerk etc. ) (Secure Auth)**
+- **OAuth ( Google, Clerk etc. ) (Secure Auth)**
 
 ## Screenshots
 
