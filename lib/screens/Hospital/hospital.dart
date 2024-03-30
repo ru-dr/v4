@@ -118,4 +118,3 @@ class _HospitalState extends State<Hospital>
     );
   }
 }
-
