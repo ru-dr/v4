@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:v4/controllers/location_controller.dart';
 
 class Weather extends StatefulWidget {
-  final String location;
-
-  const Weather({Key? key, required this.location}) : super(key: key);
-
   @override
   _WeatherState createState() => _WeatherState();
 }
@@ -23,10 +21,13 @@ class _WeatherState extends State<Weather> {
   }
 
   Future<void> _fetchWeatherData() async {
+    final locationController = Get.find<LocationController>();
+    final currentCity = locationController.getCurrentCity();
+
     final currentWeatherUrl =
-        'http://api.weatherapi.com/v1/current.json?key=4e66b71c66fb48bdb4275305241202&q=${widget.location}';
+        'http://api.weatherapi.com/v1/current.json?key=4e66b71c66fb48bdb4275305241202&q=$currentCity';
     final forecastUrl =
-        'http://api.weatherapi.com/v1/forecast.json?key=4e66b71c66fb48bdb4275305241202&q=${widget.location}&days=7';
+        'http://api.weatherapi.com/v1/forecast.json?key=4e66b71c66fb48bdb4275305241202&q=$currentCity&days=7';
 
     try {
       final currentWeatherResponse =
@@ -51,18 +52,18 @@ class _WeatherState extends State<Weather> {
     }
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff0E1219),
       appBar: AppBar(
-        title:const Text(
+        title: const Text(
           "Weather",
           style: TextStyle(
-            color:  Color(0xffffffff),
+            color: Color(0xffffffff),
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
-          )
+          ),
         ),
         backgroundColor: const Color(0xff0E1219),
         iconTheme: const IconThemeData(color: Color(0xffffffff)),
@@ -75,33 +76,100 @@ class _WeatherState extends State<Weather> {
         ),
       ),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: _forecast.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  widget.location == "Mumbai"
-                      ? "Loading..."
-                      :
-                  "Current weather \nAddress:${widget.location.split(',')[4]}${widget.location.split(',')[5]} \nWeather Type : $_currentWeather, \nTemperature: $_currentTemp°C",
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Current Weather',
+                style: TextStyle(
+                  color: Color(0xffffffff),
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
                 ),
-              );
-            } else {
-              final dayForecast = _forecast[index - 1];
-              return ListTile(
-                title: Text(
-                  "Day $index: ${dayForecast['day']['condition']['text']}, Average Temperature: ${dayForecast['day']['avgtemp_c']}°C",
-                  style: const TextStyle(color: Color(0xffffffff)),
+              ),
+              const SizedBox(height: 16.0),
+              Text(
+                'Location: ${Get.find<LocationController>().getCurrentCity()}',
+                style: const TextStyle(
+                  color: Color(0xffffffff),
+                  fontSize: 18.0,
                 ),
-              );
-            }
-          },
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Weather: $_currentWeather',
+                style: const TextStyle(
+                  color: Color(0xffffffff),
+                  fontSize: 18.0,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                'Temperature: $_currentTemp°C',
+                style: const TextStyle(
+                  color: Color(0xffffffff),
+                  fontSize: 18.0,
+                ),
+              ),
+              const SizedBox(height: 32.0),
+              const Text(
+                'Forecast',
+                style: TextStyle(
+                  color: Color(0xffffffff),
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _forecast.length,
+                  itemBuilder: (context, index) {
+                    final dayForecast = _forecast[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              dayForecast['date'],
+                              style: const TextStyle(
+                                color: Color(0xffffffff),
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              dayForecast['day']['condition']['text'],
+                              style: const TextStyle(
+                                color: Color(0xffffffff),
+                                fontSize: 16.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              '${dayForecast['day']['mintemp_c']}°C - ${dayForecast['day']['maxtemp_c']}°C',
+                              style: const TextStyle(
+                                color: Color(0xffffffff),
+                                fontSize: 16.0,
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

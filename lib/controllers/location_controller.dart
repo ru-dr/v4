@@ -9,6 +9,8 @@ List<String> emergencyContactNumbers = [
   "108"
 ]; // Global variable to store emergency contact numbers
 
+var currentCity = ''; // Default city
+
 class LocationController extends GetxController {
   Position? currentPosition;
   var isLoading = false.obs;
@@ -77,7 +79,8 @@ class LocationController extends GetxController {
           final addressComponents =
               results[0]['address_components'] as List<dynamic>;
           final city = addressComponents[3]['long_name'];
-          print(city);
+          currentCity = city;
+          print('Current city: $currentCity');
           final emergencyContactUrl =
               'https://pols-aagyi-pols.vercel.app/contact/$city';
           final emergencyContactResponse =
@@ -115,5 +118,9 @@ class LocationController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  String getCurrentCity() {
+    return currentCity;
   }
 }
