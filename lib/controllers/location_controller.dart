@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 
-List<String> emergencyContactNumbers = ['100', '108']; // Global variable to store emergency contact numbers
+List<String> emergencyContactNumbers = ["100","108"]; // Global variable to store emergency contact numbers
 
 class LocationController extends GetxController {
   Position? currentPosition;
@@ -92,11 +92,10 @@ class LocationController extends GetxController {
             print('Secondary Contact: $contactNumberSecondary');
             print('Tertiary Contact: $contactNumberTertiary');
             emergencyContactNumbers = [
-            ...emergencyContactNumbers,
-            contactNumberPrimary,
-            contactNumberSecondary,
-            contactNumberTertiary
-          ];
+              contactNumberPrimary,
+              contactNumberSecondary,
+              contactNumberTertiary
+            ];
             isLoading(false);
             update();
           } else {
