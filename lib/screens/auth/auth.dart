@@ -38,14 +38,10 @@ class Auth extends StatelessWidget {
                         Navigator.pushNamed(context, '/login');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff0E1219),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Colors.white),
-                        ),
+                        backgroundColor: Colors.white,
                       ),
                       child: const Text('Login',
-                           style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+                          style: TextStyle(color: Colors.black)),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -53,14 +49,10 @@ class Auth extends StatelessWidget {
                         Navigator.pushNamed(context, '/register');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff0E1219),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Colors.white),
-                        ),
+                        backgroundColor: Colors.white,
                       ),
                       child: const Text('Register',
-                           style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ] else ...[
                     Text(
@@ -76,14 +68,10 @@ class Auth extends StatelessWidget {
                         Navigator.pushNamed(context, '/account');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff0E1219),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: Colors.white),
-                        ),
+                        backgroundColor: Colors.white,
                       ),
                       child: const Text('Profile',
-                           style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ],

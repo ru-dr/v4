@@ -4,28 +4,40 @@ import 'package:flutter_svg/svg.dart';
 class Greeting extends StatelessWidget {
   const Greeting({super.key});
 
+  String getGreeting() {
+  var hour = DateTime.now().hour;
+
+  if (hour < 12) {
+    return 'Good Morning!';
+  } else if (hour < 17) {
+    return 'Good Afternoon!';
+  } else {
+    return 'Good Evening!';
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Good Morning!',
-              style: TextStyle(
+              getGreeting(),
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
             ),
-            SizedBox(
+           const SizedBox(
               height: 5,
             ),
-            Text(
-              "Discover The India",
+            const Text(
+              "Discover the India",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,

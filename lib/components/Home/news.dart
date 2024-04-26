@@ -19,21 +19,46 @@ class _NewsState extends State<News> {
     fetchNews();
   }
 
+  final commonParams = {
+    "lang": "en",
+    "sort_by": "date",
+    "page_size": "10",
+    "page": "1",
+  };
+
   Future<void> fetchNews() async {
     try {
-      const apiKey =
-          "30a7f133922d4cb4a1d89c10fdd4759d"; // Replace with your News API key
-      const apiUrl = "https://newsapi.org/v2/";
-      const queryString = "travel safety";
-      const type = "everything";
-      const sorting = "popularity";
-      final response = await http.get(Uri.parse(
-          '$apiUrl$type?q=$queryString&sortBy=$sorting&apiKey=$apiKey'));
+      const apiKey = "KNYKNyVwCPOB-hdJPcNtPTwhL8UD9ZX2zv1d5ov2M30";
+      const apiUrl = "https://api.newscatcherapi.com/v2/search";
+      // const queryString = "travel";
+      final params = {
+        ...commonParams,
+        "q": "tourism OR travel OR vacation OR holiday OR trip OR journey OR adventure OR sightseeing OR wanderlust OR travelogue OR travelog OR travelogue OR travelblog OR travelblogger OR travelblogging OR travelwriter OR travelwriting OR travelphotography OR travelphoto OR travelphotographer OR travelvlogger OR travelvlogging OR travelvideo OR travelvlog OR travelgram OR travelguide OR travelbook OR travelbooklet OR travelmagazine OR traveljournal OR traveljournalism OR traveljournalist OR travelnews OR travelreport OR travelreporter OR travelreporting OR travelstory OR travelstorytelling OR travelnarrative OR travelmemoir OR travelbook"
+        // AND (welcomed OR celebrated OR loved OR succeeded OR joyful OR victorious OR flourished OR thrived OR admired OR honored OR delighted OR enthusiastic OR grateful OR content OR excited OR happy OR optimistic OR radiant OR triumphant OR prosperous OR killed OR robbed OR arrested OR hated OR failed OR rejected OR betrayed OR suffered OR lost OR misfortune OR despair OR depressed OR miserable OR abandoned OR lonely OR defeated OR desperate OR forsaken OR ruined OR wretched)",
+      };
+
+      final uri = Uri.parse(apiUrl).replace(queryParameters: params);
+      final response = await http.get(uri, headers: {"x-api-key": apiKey});
 
       if (response.statusCode == 200) {
         final parsedResponse = jsonDecode(response.body);
         setState(() {
-          news = parsedResponse['articles'].take(10).toList();
+          news = parsedResponse['articles']
+              .map((article) => {
+                    'title': article['title'],
+                    'description': article['summary'],
+                    'url': article['link'],
+                    'urlToImage': article['media'],
+                  })
+              .toList();
+
+// Create a set of unique URLs
+          Set uniqueUrls = news.map((article) => article['url']).toSet();
+
+// Filter the news list based on the set of unique URLs
+          news = news
+              .where((article) => uniqueUrls.remove(article['url']))
+              .toList();
         });
       } else {
         throw Exception('Failed to load news');

@@ -136,20 +136,26 @@ class _LoginFormState extends State<LoginForm> {
                 signIn(context);
               },
               icon: const Icon(Icons.login, color: Colors.white),
-              label: const Text("Sign in",  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+              label: const Text(
+                "Sign in",
+                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+              ),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff0E1219),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.white),
-                  ),
+                backgroundColor: const Color(0xff0E1219),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: const BorderSide(color: Colors.white),
                 ),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
               },
-              child: const Text('Create Account',  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+              child: const Text(
+                'Create Account',
+                style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+              ),
             ),
             const SizedBox(height: 16),
             // Row(

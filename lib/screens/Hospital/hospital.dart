@@ -19,6 +19,7 @@ class _HospitalState extends State<Hospital>
   List<dynamic> _nearbyHospitals = [];
 
   final locationController = Get.find<LocationController>();
+  bool _isLoading = true;
 
   @override
   bool get wantKeepAlive => true;
@@ -56,6 +57,7 @@ class _HospitalState extends State<Hospital>
           );
           return {...hospital, 'distance': distanceInMeters};
         }).toList();
+        _isLoading = false;
       });
     } else {
       throw Exception('Failed to fetch nearby hospitals');
@@ -81,50 +83,55 @@ class _HospitalState extends State<Hospital>
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _nearbyHospitals.length,
-              itemBuilder: (context, index) {
-                final hospital = _nearbyHospitals[index];
-                final name = hospital['name'];
-                final photoReference =
-                    hospital['photos'] != null && hospital['photos'].isNotEmpty
-                        ? hospital['photos'][0]['photo_reference']
-                        : null;
-                final distance = hospital['distance'];
-                final isOpen = hospital['opening_hours'] != null &&
-                    hospital['opening_hours']['open_now'] == true;
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xffffffff)))
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _nearbyHospitals.length,
+                    itemBuilder: (context, index) {
+                      final hospital = _nearbyHospitals[index];
+                      final name = hospital['name'];
+                      final photoReference = hospital['photos'] != null &&
+                              hospital['photos'].isNotEmpty
+                          ? hospital['photos'][0]['photo_reference']
+                          : null;
+                      final distance = hospital['distance'];
+                      final isOpen = hospital['opening_hours'] != null &&
+                          hospital['opening_hours']['open_now'] == true;
 
-                return Card(
-                  child: ListTile(
-                    leading: photoReference != null
-                        ? Image.network(
-                            'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$photoReference&key=AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            'assets/SVG/hospital_place.jpg', // Path to the placeholder image
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                    title: Text(name),
-                    subtitle: Text('Distance: ${distance.round()} meters'),
-                    trailing:
-                        isOpen ? const Text('Open') : const Text('Closed'),
+                      return Card(
+                        child: ListTile(
+                          leading: photoReference != null
+                              ? Image.network(
+                                  'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$photoReference&key=AIzaSyA3wfl35CzCuXjk1wCkz64hZawNYyWjHDg',
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/SVG/hospital_place.jpg', // Path to the placeholder image
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                          title: Text(name),
+                          subtitle:
+                              Text('Distance: ${distance.round()} meters'),
+                          trailing: isOpen
+                              ? const Text('Open')
+                              : const Text('Closed'),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
