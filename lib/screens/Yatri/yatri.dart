@@ -153,7 +153,7 @@ class _YatriState extends State<Yatri> {
 class ChatBubble extends StatelessWidget {
   final ChatMessage message;
 
-  const ChatBubble({super.key, required this.message});
+  const ChatBubble({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -182,14 +182,11 @@ class ChatBubble extends StatelessWidget {
                     ? MarkdownBody(
                         data: message.text,
                         styleSheet: MarkdownStyleSheet(
-                          p: const TextStyle(
-                            color: Colors.white,
-                          ),
+                          p: const TextStyle(color: Colors.white),
                         ),
                       )
                     : Text(
                         message.text,
-                        textAlign: TextAlign.start,
                         style: const TextStyle(color: Colors.white),
                       ),
               ),
@@ -214,6 +211,9 @@ class ChatMessage {
   final bool isUser;
   final bool isMarkdown;
 
-  const ChatMessage(
-      {required this.text, required this.isUser, this.isMarkdown = false});
+  const ChatMessage({
+    required this.text,
+    required this.isUser,
+    this.isMarkdown = true,
+  });
 }
