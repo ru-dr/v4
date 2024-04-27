@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:v4/controllers/location_controller.dart';
 
 class Weather extends StatefulWidget {
+  const Weather({super.key});
+
   @override
   _WeatherState createState() => _WeatherState();
 }
