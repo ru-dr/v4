@@ -52,19 +52,12 @@ class _WeatherState extends State<Weather> {
     }
   }
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff0E1219),
       appBar: AppBar(
-        title: const Text(
-          "Weather",
-          style: TextStyle(
-            color: Color(0xffffffff),
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text("Weather", style: Theme.of(context).textTheme.bodySmall),
         backgroundColor: const Color(0xff0E1219),
         iconTheme: const IconThemeData(color: Color(0xffffffff)),
         centerTitle: true,
@@ -84,8 +77,8 @@ class _WeatherState extends State<Weather> {
               const Text(
                 'Current Weather',
                 style: TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 24.0,
+                  color: Colors.white,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -93,32 +86,32 @@ class _WeatherState extends State<Weather> {
               Text(
                 'Location: ${Get.find<LocationController>().getCurrentCity()}',
                 style: const TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 18.0,
+                  color: Colors.white,
+                  fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 8.0),
               Text(
                 'Weather: $_currentWeather',
                 style: const TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 18.0,
+                  color: Colors.white,
+                  fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 8.0),
               Text(
                 'Temperature: $_currentTemp°C',
                 style: const TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 18.0,
+                  color: Colors.white,
+                  fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 32.0),
               const Text(
                 'Forecast',
                 style: TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 24.0,
+                  color: Colors.white,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -128,38 +121,32 @@ class _WeatherState extends State<Weather> {
                   itemCount: _forecast.length,
                   itemBuilder: (context, index) {
                     final dayForecast = _forecast[index];
+                    final dateTime = DateTime.parse(dayForecast['date']);
+                    final formattedDate = '${dateTime.month}/${dateTime.day}';
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Text(
-                              dayForecast['date'],
-                              style: const TextStyle(
-                                color: Color(0xffffffff),
-                                fontSize: 16.0,
-                              ),
+                          Text(
+                            formattedDate,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
                             ),
                           ),
-                          Expanded(
-                            child: Text(
-                              dayForecast['day']['condition']['text'],
-                              style: const TextStyle(
-                                color: Color(0xffffffff),
-                                fontSize: 16.0,
-                              ),
-                              textAlign: TextAlign.center,
+                          Text(
+                            dayForecast['day']['condition']['text'],
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
                             ),
                           ),
-                          Expanded(
-                            child: Text(
-                              '${dayForecast['day']['mintemp_c']}°C - ${dayForecast['day']['maxtemp_c']}°C',
-                              style: const TextStyle(
-                                color: Color(0xffffffff),
-                                fontSize: 16.0,
-                              ),
-                              textAlign: TextAlign.end,
+                          Text(
+                            '${dayForecast['day']['mintemp_c']}°C - ${dayForecast['day']['maxtemp_c']}°C',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
                             ),
                           ),
                         ],
