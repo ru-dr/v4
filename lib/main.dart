@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
             '/': (context) => const Home(),
             '/auth': (context) => const Auth(),
             '/translate': (context) => const Translate(),
-            '/weather': (context) => Weather(),
+            '/weather': (context) => const Weather(),
             '/hospital': (context) => const Hospital(),
             '/emergency': (context) => const Emergency(),
             '/yatri': (context) => const Yatri(),
