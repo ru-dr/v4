@@ -11,7 +11,9 @@ class Yatri extends StatefulWidget {
 }
 
 class _YatriState extends State<Yatri> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController(
+    text: 'Hi, Yatri 😀!',
+  );
   final List<ChatMessage> _messages = [];
   late final GenerativeModel _model;
   late final ChatSession _chat;

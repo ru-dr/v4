@@ -4,7 +4,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 
-List<String> emergencyContactNumbers = ["100","108"]; // Global variable to store emergency contact numbers
+List<String> emergencyContactNumbers = [
+  "100",
+  "108"
+]; // Global variable to store emergency contact numbers
+
+var currentCity = ''; // Default city
 
 class LocationController extends GetxController {
   Position? currentPosition;
@@ -74,7 +79,8 @@ class LocationController extends GetxController {
           final addressComponents =
               results[0]['address_components'] as List<dynamic>;
           final city = addressComponents[3]['long_name'];
-          print(city);
+          currentCity = city;
+          print('Current city: $currentCity');
           final emergencyContactUrl =
               'https://pols-aagyi-pols.vercel.app/contact/$city';
           final emergencyContactResponse =
@@ -112,5 +118,9 @@ class LocationController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  String getCurrentCity() {
+    return currentCity;
   }
 }

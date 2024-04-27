@@ -21,7 +21,6 @@ class _NewsState extends State<News> {
 
   final commonParams = {
     "lang": "en",
-    "sort_by": "date",
     "page_size": "10",
     "page": "1",
   };
@@ -33,8 +32,7 @@ class _NewsState extends State<News> {
       // const queryString = "travel";
       final params = {
         ...commonParams,
-        "q": "tourism OR travel OR vacation OR holiday OR trip OR journey OR adventure OR sightseeing OR wanderlust OR travelogue OR travelog OR travelogue OR travelblog OR travelblogger OR travelblogging OR travelwriter OR travelwriting OR travelphotography OR travelphoto OR travelphotographer OR travelvlogger OR travelvlogging OR travelvideo OR travelvlog OR travelgram OR travelguide OR travelbook OR travelbooklet OR travelmagazine OR traveljournal OR traveljournalism OR traveljournalist OR travelnews OR travelreport OR travelreporter OR travelreporting OR travelstory OR travelstorytelling OR travelnarrative OR travelmemoir OR travelbook"
-        // AND (welcomed OR celebrated OR loved OR succeeded OR joyful OR victorious OR flourished OR thrived OR admired OR honored OR delighted OR enthusiastic OR grateful OR content OR excited OR happy OR optimistic OR radiant OR triumphant OR prosperous OR killed OR robbed OR arrested OR hated OR failed OR rejected OR betrayed OR suffered OR lost OR misfortune OR despair OR depressed OR miserable OR abandoned OR lonely OR defeated OR desperate OR forsaken OR ruined OR wretched)",
+        "q": "tourism OR travel OR vacation OR holiday OR trip OR journey",
       };
 
       final uri = Uri.parse(apiUrl).replace(queryParameters: params);
